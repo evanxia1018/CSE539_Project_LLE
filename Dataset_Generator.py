@@ -53,7 +53,7 @@ def get_helix_dataset(numOfSamples):
             noise_3 = numpy.random.normal(0, 0.1)
             sample_list.append([noise_1, noise_2, noise_3])
             continue
-        p_i = random.random()
+        p_i = random.random() 
         x_i = [(2 + math.cos(8 * p_i)) * math.cos(p_i), (2 + math.cos(8 * p_i)) * math.sin(p_i), math.sin(8 * p_i)]
         sample_list.append(x_i)
     return sample_list
