@@ -3,121 +3,7 @@ from scipy.linalg import eigh, solve
 from scipy.sparse import csr_matrix
 from sklearn.neighbors import NearestNeighbors
 
-# def barycenter_weights(X, Z, reg=1e-3):
-#     """Compute barycenter weights of X from Y along the first axis
-#
-#     We estimate the weights to assign to each point in Y[i] to recover
-#     the point X[i]. The barycenter weights sum to 1.
-#
-#     Parameters
-#     ----------
-#     X : array-like, shape (n_samples, n_dim)
-#
-#     Z : array-like, shape (n_samples, n_neighbors, n_dim)
-#
-#     reg : float, optional
-#         amount of regularization to add for the problem to be
-#         well-posed in the case of n_neighbors > n_dim
-#
-#     Returns
-#     -------
-#     B : array-like, shape (n_samples, n_neighbors)
-#
-#     Notes
-#     -----
-#     See developers note for more information.
-#     """
-#     # X = check_array(X, dtype=FLOAT_DTYPES)
-#     # Z = check_array(Z, dtype=FLOAT_DTYPES, allow_nd=True)
-#
-#     n_samples, n_neighbors = X.shape[0], Z.shape[1]
-#     B = np.empty((n_samples, n_neighbors), dtype=X.dtype)
-#     v = np.ones(n_neighbors, dtype=X.dtype)
-#
-#     # this might raise a LinalgError if G is singular and has trace
-#     # zero
-#     for i, A in enumerate(Z.transpose(0, 2, 1)):
-#         C = A.T - X[i]  # broadcasting
-#         G = np.dot(C, C.T)
-#         trace = np.trace(G)
-#         if trace > 0:
-#             R = reg * trace
-#         else:
-#             R = reg
-#         G.flat[::Z.shape[1] + 1] += R
-#         w = solve(G, v, sym_pos=True)
-#         B[i, :] = w / np.sum(w)
-#     return B
-#
-#
-# def barycenter_kneighbors_graph(X, n_neighbors, reg=1e-3, n_jobs=1):
-#     """Computes the barycenter weighted graph of k-Neighbors for points in X
-#
-#     Parameters
-#     ----------
-#     X : array-like
-#         Sample data, shape = (n_samples, n_features), in the form of a
-#         numpy array.
-#
-#     n_neighbors : int
-#         Number of neighbors for each sample.
-#
-#     reg : float, optional
-#         Amount of regularization when solving the least-squares
-#         problem. Only relevant if mode='barycenter'. If None, use the
-#         default.
-#
-#     n_jobs : int, optional (default = 1)
-#         The number of parallel jobs to run for neighbors search.
-#         If ``-1``, then the number of jobs is set to the number of CPU cores.
-#
-#     Returns
-#     -------
-#     A : sparse matrix in CSR format, shape = [n_samples, n_samples]
-#         A[i, j] is assigned the weight of edge that connects i to j.
-#
-#     See also
-#     --------
-#     sklearn.neighbors.kneighbors_graph
-#     sklearn.neighbors.radius_neighbors_graph
-#     """
-#     knn = NearestNeighbors(n_neighbors + 1, n_jobs=n_jobs).fit(X)
-#     n_samples = X.shape[0]
-#
-#     print(knn.kneighbors(X, return_distance=True)) # for test only
-#
-#     ind = knn.kneighbors(X, return_distance=False)[:, 1:]
-#     print(ind) # for test only
-#     print(X[ind]) # for test only
-#     data = barycenter_weights(X, X[ind], reg=reg)
-#     indptr = np.arange(0, n_samples * n_neighbors + 1, n_neighbors)
-#     return csr_matrix((data.ravel(), ind.ravel(), indptr),
-#                       shape=(n_samples, n_samples))
-#
-#
-# def null_space(M, k, k_skip=1):
-#     """
-#     Find the null space of a matrix M.
-#
-#     Parameters
-#     ----------
-#     M : {array, matrix, sparse matrix, LinearOperator}
-#         Input covariance matrix: should be symmetric positive semi-definite
-#
-#     k : integer
-#         Number of eigenvalues/vectors to return
-#
-#     k_skip : integer, optional
-#         Number of low eigenvalues to skip.
-#     """
-#
-#     if hasattr(M, 'toarray'):
-#         M = M.toarray()
-#     eigen_values, eigen_vectors = eigh(
-#         M, eigvals=(k_skip, k + k_skip - 1), overwrite_a=True)
-#     index = np.argsort(np.abs(eigen_values))
-#     return eigen_vectors[:, index], np.sum(eigen_values)
-#
+from scipy.spatial.distance import cdist
 
 import random
 import math
@@ -221,7 +107,7 @@ def get_hd_dataset(numOfSamples):
 
 
 def locally_linear_embedding(
-        X, n_neighbors, n_components, reg=1e-3, n_jobs=1):
+        X, k_neighbors, t_dimensions, reg_factor=1e-3, n_jobs=1):
     """Perform a Locally Linear Embedding analysis on the data.
 
     Read more in the :ref:`User Guide <locally_linear_embedding>`.
@@ -232,10 +118,10 @@ def locally_linear_embedding(
         Sample data, shape = (n_samples, n_features), in the form of a
         numpy array.
 
-    n_neighbors : integer
+    k_neighbors : integer
         number of neighbors to consider for each point.
 
-    n_components : integer
+    t_dimensions : integer
         number of coordinates for the manifold.
 
     reg : float
@@ -248,7 +134,7 @@ def locally_linear_embedding(
 
     Returns
     -------
-    Y : array-like, shape [n_samples, n_components]
+    Y : array-like, shape [n_samples, t_dimensions]
         Embedding vectors.
 
     squared_error : float
@@ -259,46 +145,74 @@ def locally_linear_embedding(
 
     # check X dtype: must be np.float64
 
-    N, d_in = X.shape
+    n_samples, d_in = X.shape
 
-    if n_components > d_in:
-        raise ValueError("Not satisfy: output dimension <= input dimension")
-    if n_neighbors >= N or n_neighbors <= 0:
-        raise ValueError("Not satisfy: 0 < n_neighbors <= n_samples")
+    if t_dimensions > d_in:
+        raise ValueError("Your input does NOT satisfy: output dimension <= input dimension")
+    if k_neighbors >= n_samples or k_neighbors <= 0:
+        raise ValueError("Your input does NOT satisfy: 0 < k_neighbors < n_samples")
+
+    k_take = k_neighbors + 1
+
+    # step 1, compute the k nearest neighbors of each point
+    dists = cdist(X, X)
+    #print("The distance: \n" + str(dists))
+    idx = np.argpartition(dists, (1, k_take), axis=0)[1:k_take].T
+    #print("Own knn: \n" + str(idx))
+
 
     # step 1, compute the k-nn of each point
-    knn = NearestNeighbors(n_neighbors + 1, n_jobs=n_jobs).fit(X)
-    ind = knn.kneighbors(X, return_distance=False)[:, 1:]
+    #knn = NearestNeighbors(k_take, n_jobs=n_jobs).fit(X)
+    #ind = knn.kneighbors(X, return_distance=False)[:, 1:]
 
-    Z = X[ind]
+    #print("\nKNN DIST: ")
+    #print(knn.kneighbors(X, return_distance=True))
+    #print("\n")
 
-    # step 2, 
-    B = np.empty((N, n_neighbors), dtype=X.dtype) # the Matrix for the
-    v = np.ones(n_neighbors, dtype=X.dtype)  # the ALL-ONE vector
+    #print("Neighbors Index: " + str(ind))
 
-    # this might raise a LinalgError if G is singular and has trace
-    # zero
-    for i, A in enumerate(Z.transpose(0, 2, 1)):
-        C = A.T - X[i]  # broadcasting
-        G = np.dot(C, C.T)
-        trace = np.trace(G)
+    Z = X[idx].transpose(0, 2, 1) # own implementation
+    # Z = X[ind].transpose(0, 2, 1)
+
+    #print(Z)  # for test only
+    #print("Z.shape[2]: " + str(Z.shape[2]))
+    # print(Z[0]) # for test only
+
+    # step 2, compute co-variance matrix and then the weights
+    Weights = np.empty((n_samples, k_neighbors), dtype=X.dtype) # the Matrix to contain the Weights
+    Ones = np.ones(k_neighbors, dtype=X.dtype)  # the ALL-ONE vector
+
+    for i, P in enumerate(Z):
+
+        D = P.T - X[i]  # each neighbors - this point
+
+        Cov = np.dot(D, D.T) # G is the local covariance matrix
+
+        # regularization
+        trace = np.trace(Cov)
         if trace > 0:
-            R = reg * trace
+            R = reg_factor * trace
         else:
-            R = reg
-        G.flat[::Z.shape[1] + 1] += R
-        w = solve(G, v, sym_pos=True)
-        B[i, :] = w / np.sum(w)
+            R = reg_factor
+        Cov.flat[::k_take] += R # add the reg factor to the main diagonal of G
 
-    indptr = np.arange(0, N * n_neighbors + 1, n_neighbors)
-    W = csr_matrix((B.ravel(), ind.ravel(), indptr), shape=(N, N))
+        # find the weights of each neighbors
+        w = solve(Cov, Ones, assume_a='pos')
+
+        Weights[i, :] = w / np.sum(w) #
+
+    # put the Weights in to a sparse matrix
+    indptr = np.arange(0, n_samples * k_neighbors + 1, k_neighbors)
+    # W = csr_matrix((B.ravel(), ind.ravel(), indptr), shape=(n_samples, n_samples))
+    W = csr_matrix((Weights.ravel(), idx.ravel(), indptr), shape=(n_samples, n_samples))
 
     # Step 3 compute M = (I-W)'(I-W)
     M = (W.T * W - W.T - W).toarray()
-    M.flat[::M.shape[0] + 1] += 1  # W = W - I = W - I
+    # print("M.shape:" + str(M.shape))
+    M.flat[::n_samples + 1] += 1  #
 
     # Step 4 compte the eigen_values and eigen_vectors of M
-    eigen_values, eigen_vectors = eigh(M, eigvals=(1, n_components), overwrite_a=True)
+    eigen_values, eigen_vectors = eigh(M, eigvals=(1, t_dimensions), overwrite_a=True)
 
     # Step 5 the first d+1 eigen_vectors is the output
     index = np.argsort(np.abs(eigen_values))
