@@ -75,10 +75,42 @@ def get_continuity(reduced_dataset, original_dataset, k):
     return result
 
 
-# def get_generalization_error(reduced_dataset, original_dataset):
-#     reduced_dataset_mapping = dict()
-#     for i in range(0, len(reduced_dataset)):
-#         reduced_dataset_mapping[str(reduced_dataset[i])] = i
+def get_generalization_error(reduced_dataset, original_dataset): # first 80% data to be training set and last 20% data to be testing set
+    reduced_dataset_mapping = dict()
+    wrong_predict_count = 0
+    n = len(reduced_dataset)
+    for i in range(0, len(reduced_dataset)):
+        reduced_dataset_mapping[str(reduced_dataset[i])] = i
+    dataset_labels = get_artificial_dataset_labels(original_dataset)
+    for i in range(int(n * 0.8), n):
+        curr = reduced_dataset[i]
+        curr_NN = get_NN(curr, reduced_dataset[:int(n * 0.8)])
+        curr_NN_idx = reduced_dataset_mapping[str(curr_NN)]
+        curr_predict = dataset_labels[curr_NN_idx]
+        ground_truth = dataset_labels[i]
+        if curr_predict != ground_truth:
+            wrong_predict_count += 1
+    return wrong_predict_count / (n * 0.2)
+
+
+def get_artificial_dataset_labels(dataset):
+    labels = []
+    rows = len(dataset)
+    cols = len(dataset[0])
+    for i in range(0, rows):
+        curr = dataset[i]
+        cls = -1
+        for j in range(0, cols):
+            if round(curr[j]) % 2 == 1:
+                cls *= -1
+        labels.append(cls)
+    return labels
+
+def get_NN(datapoint, dataset):
+    ranking = sorted(dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(datapoint)), reverse=False)
+    return ranking[1]
+
+
 
 
 
@@ -127,11 +159,11 @@ def get_continuity(reduced_dataset, original_dataset, k):
 
 
 
-def get_rank(datapoint_1, datapoint_2, dataset):    # what if two points have exactly the same coordinate?
-    ranking = sorted(dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(datapoint_1)), reverse=False)
-    ranking.remove(datapoint_1)
-    for x in range(0, len(ranking)):
-        if ranking[x] == datapoint_2:
-            return x + 1
-    return -1
+# def get_rank(datapoint_1, datapoint_2, dataset):    # what if two points have exactly the same coordinate?
+#     ranking = sorted(dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(datapoint_1)), reverse=False)
+#     ranking.remove(datapoint_1)
+#     for x in range(0, len(ranking)):
+#         if ranking[x] == datapoint_2:
+#             return x + 1
+#     return -1
 

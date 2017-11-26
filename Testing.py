@@ -100,3 +100,14 @@ import Evaluation as eval
 dataset = dg.get_hd_dataset(5000)
 reduced_dataset = eval.pca_dim_reduction(dataset, 5)
 continuity = eval.get_continuity(reduced_dataset, dataset, 12)
+
+
+# ***********************************scripts to test label_generation
+import Dataset_Generator as dg
+import Evaluation as eval
+dataset = dg.get_broken_swiss_roll_dataset(5000)
+labels = eval.get_artificial_dataset_labels(dataset)
+reduced_dataset = eval.pca_dim_reduction(dataset, 2)
+error = eval.get_generalization_error(reduced_dataset, dataset)
+
+
