@@ -107,14 +107,14 @@ def get_artificial_dataset_labels(dataset):
     return labels
 
 
-def get_natural_dataset_samples():
+def get_natural_dataset_samples(num_of_samples):
     from mnist import MNIST
     import random
     mndata = MNIST('/Users/evanxia/Dropbox/CSE569/MNIST_dataset')
     images, labels = mndata.load_training()
     selected_img = []
     selected_labels = []
-    selected_idxs = random.sample(range(0, len(images)), 5000)
+    selected_idxs = random.sample(range(0, len(images)), num_of_samples)
     for i in range(0, len(selected_idxs)):
         # newPoint = [float(j) for j in images[selected_idxs[i]]]
         # selected_img.append(newPoint)

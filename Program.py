@@ -1,21 +1,22 @@
 print("**********************************************************************")
 print("Hello. This is CSE569 Project Demo, produced by Haisi Yi and Zheng Xia")
 print("**********************************************************************\n\n")
-import time;
-localtime = time.asctime( time.localtime(time.time()) )
-print ("Local current time :", localtime)
+import time
+localtime = time.asctime( time.localtime(time.time()))
+print("Local current time :", localtime)
 
 # Following are the code for stage 1: Datasets creation and reduction
 # Please note that stage 1 must be done before stage 2
 print("Stage 1: creating the five artificial dataset and reading the MNIST natural dataset, then generate datasets with reduced dimentionality, using LLE and PCA\n")
 import Dataset_Generator as dg
 import Evaluation as evaluation
+# Note running 5000 samples may take awfully long time, while 1000 samples takes only around 30 mins.
 swiss_roll_dataset = dg.get_swiss_roll_dataset(5000)
 helix_dataset = dg.get_helix_dataset(5000)
 twin_peaks_dataset = dg.get_twin_peaks(5000)
 broken_swiss_dataset = dg.get_broken_swiss_roll_dataset(5000)
 hd_dataset = dg.get_hd_dataset(5000)
-MNIST_images, MNIST_labels = evaluation.get_natural_dataset_samples()
+MNIST_images, MNIST_labels = evaluation.get_natural_dataset_samples(5000)
 print("Finish datasets generation and reading successfully\n")
 import MyLLE as lle
 import numpy as np
@@ -38,7 +39,6 @@ lle_reduced_broken_swiss = lle.locally_linear_embedding(np.array(broken_swiss_da
 lle_reduced_hd = lle.locally_linear_embedding(np.array(hd_dataset, np.float64), 5, 5)[0].tolist()
 lle_reduced_MNIST_images = lle.locally_linear_embedding(np.array(MNIST_images, np.float64), 5, 20)[0].tolist()
 # ************************ End of the stage 1
-
 
 
 
@@ -136,23 +136,23 @@ print("HD dataset(reduced by LLE) is: " + str(error_lle_hd))
 
 
 
-print("Now evaluating Trustworthiness of each technique on MNIST dataset, this is going to take a while\n")
+print("\nNow evaluating Trustworthiness of each technique on MNIST dataset, this is going to take a while")
 trust_pca_MNIST = evaluation.get_trustworthiness(pca_reduced_MNIST_images, MNIST_images, 12)
 trust_lle_MNIST = evaluation.get_trustworthiness(lle_reduced_MNIST_images, MNIST_images, 12)
 print("MNIST dataset(reduced by PCA) is: " + str(trust_pca_MNIST))
 print("MNIST dataset(reduced by LLE) is: " + str(trust_lle_MNIST))
 
-print("Now evaluating Continuity of each technique on MNIST dataset, this is going to take a while\n")
+print("\nNow evaluating Continuity of each technique on MNIST dataset, this is going to take a while")
 continuity_pca_MNIST = evaluation.get_continuity(pca_reduced_MNIST_images, MNIST_images, 12)
 continuity_lle_MNIST = evaluation.get_continuity(lle_reduced_MNIST_images, MNIST_images, 12)
 print("MNIST dataset(reduced by PCA) is: " + str(continuity_pca_MNIST))
 print("MNIST dataset(reduced by LLE) is: " + str(continuity_lle_MNIST))
 
-print("Now evaluating generalization errors of each technique on MNIST dataset, this is going to take a while\n")
+print("\nNow evaluating generalization errors of each technique on MNIST dataset, this is going to take a while")
 error_pca_MNIST = evaluation.get_generalization_error(pca_reduced_MNIST_images, MNIST_images, MNIST_labels)
 error_lle_MNIST = evaluation.get_generalization_error(lle_reduced_MNIST_images, MNIST_images, MNIST_labels)
 print("MNIST dataset(reduced by PCA) is: " + str(error_pca_MNIST))
 print("MNIST dataset(reduced by LLE) is: " + str(error_lle_MNIST))
 
 localtime = time.asctime( time.localtime(time.time()) )
-print ("Local current time :", localtime)
+print("Local current time :", localtime)
