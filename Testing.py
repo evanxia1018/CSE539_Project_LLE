@@ -102,7 +102,7 @@ reduced_dataset = eval.pca_dim_reduction(dataset, 5)
 continuity = eval.get_continuity(reduced_dataset, dataset, 12)
 
 
-# ***********************************scripts to test label_generation
+# ***********************************scripts to test label_generation and generalization error
 import Dataset_Generator as dg
 import Evaluation as eval
 dataset = dg.get_broken_swiss_roll_dataset(5000)
@@ -110,4 +110,78 @@ labels = eval.get_artificial_dataset_labels(dataset)
 reduced_dataset = eval.pca_dim_reduction(dataset, 2)
 error = eval.get_generalization_error(reduced_dataset, dataset)
 
+# ***********************************scripts to read MNIST
+from mnist import MNIST
+mndata = MNIST('/Users/evanxia/Dropbox/CSE569/MNIST_dataset')
+images, labels = mndata.load_training()
+
+
+# ***********************************scripts to test Trustworthiness and continuity in Natural dataset using LLE
+
+# MNIST
+import Evaluation as eval
+import MyLLE as lle
+import numpy as np
+dataset, labels = eval.get_natural_dataset_samples()
+reduced_dataset, error = lle.locally_linear_embedding(np.array(dataset, np.float64), 5, 20)
+reduced_dataset = reduced_dataset.tolist()
+trust = eval.get_trustworthiness(reduced_dataset, dataset, 12)
+continuity = eval.get_continuity(reduced_dataset, dataset, 12)
+
+# ***********************************scripts to test Trustworthiness and continuity in artificial dataset using LLE
+# Swiss roll
+import Dataset_Generator as dg
+import Evaluation as eval
+import MyLLE as lle
+import numpy as np
+dataset = dg.get_swiss_roll_dataset(5000)
+reduced_dataset, error = lle.locally_linear_embedding(np.array(dataset, np.float64), 5, 2)
+reduced_dataset = reduced_dataset.tolist()
+trust = eval.get_trustworthiness(reduced_dataset, dataset, 12)
+continuity = eval.get_continuity(reduced_dataset, dataset, 12)
+
+
+# Helix
+import Dataset_Generator as dg
+import Evaluation as eval
+import MyLLE as lle
+import numpy as np
+dataset = dg.get_helix_dataset(5000)
+reduced_dataset, error = lle.locally_linear_embedding(np.array(dataset, np.float64), 5, 1)
+reduced_dataset = reduced_dataset.tolist()
+trust = eval.get_trustworthiness(reduced_dataset, dataset, 12)
+continuity = eval.get_continuity(reduced_dataset, dataset, 12)
+
+# Twin peaks
+import Dataset_Generator as dg
+import Evaluation as eval
+import MyLLE as lle
+import numpy as np
+dataset = dg.get_twin_peaks(5000)
+reduced_dataset, error = lle.locally_linear_embedding(np.array(dataset, np.float64), 5, 2)
+reduced_dataset = reduced_dataset.tolist()
+trust = eval.get_trustworthiness(reduced_dataset, dataset, 12)
+continuity = eval.get_continuity(reduced_dataset, dataset, 12)
+
+# Broken Swiss
+import Dataset_Generator as dg
+import Evaluation as eval
+import MyLLE as lle
+import numpy as np
+dataset = dg.get_broken_swiss_roll_dataset(5000)
+reduced_dataset, error = lle.locally_linear_embedding(np.array(dataset, np.float64), 5, 2)
+reduced_dataset = reduced_dataset.tolist()
+trust = eval.get_trustworthiness(reduced_dataset, dataset, 12)
+continuity = eval.get_continuity(reduced_dataset, dataset, 12)
+
+# HD
+import Dataset_Generator as dg
+import Evaluation as eval
+import MyLLE as lle
+import numpy as np
+dataset = dg.get_hd_dataset(5000)
+reduced_dataset, error = lle.locally_linear_embedding(np.array(dataset, np.float64), 5, 5)
+reduced_dataset = reduced_dataset.tolist()
+trust = eval.get_trustworthiness(reduced_dataset, dataset, 12)
+continuity = eval.get_continuity(reduced_dataset, dataset, 12)
 

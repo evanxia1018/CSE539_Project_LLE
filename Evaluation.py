@@ -1,11 +1,11 @@
 from matplotlib.mlab import PCA
 import numpy as np
-import math
 
 
 def pca_dim_reduction(input_data, target_dim):
     reduced_dataset = []
-    pca_obj = PCA(np.array(input_data))
+    # pca_obj = PCA(np.array(input_data))
+    pca_obj = PCA(np.array(input_data), standardize=False)
     projected_dataset = pca_obj.Y.tolist()
     for projected_data in projected_dataset:
         reduced_data = []  # one data point with reduced dim
@@ -70,18 +70,18 @@ def get_continuity(reduced_dataset, original_dataset, k):
             original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
             if (reduced_rank > k) and (original_rank <= k):
                 rank_sum += reduced_rank - k
-    print(rank_sum)
+    # print(rank_sum)
     result = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * rank_sum
     return result
 
 
-def get_generalization_error(reduced_dataset, original_dataset): # first 80% data to be training set and last 20% data to be testing set
+def get_generalization_error(reduced_dataset, original_dataset, dataset_labels): # first 80% data to be training set and last 20% data to be testing set
     reduced_dataset_mapping = dict()
     wrong_predict_count = 0
     n = len(reduced_dataset)
     for i in range(0, len(reduced_dataset)):
         reduced_dataset_mapping[str(reduced_dataset[i])] = i
-    dataset_labels = get_artificial_dataset_labels(original_dataset)
+    # dataset_labels = get_artificial_dataset_labels(original_dataset)
     for i in range(int(n * 0.8), n):
         curr = reduced_dataset[i]
         curr_NN = get_NN(curr, reduced_dataset[:int(n * 0.8)])
@@ -105,6 +105,24 @@ def get_artificial_dataset_labels(dataset):
                 cls *= -1
         labels.append(cls)
     return labels
+
+
+def get_natural_dataset_samples():
+    from mnist import MNIST
+    import random
+    mndata = MNIST('/Users/evanxia/Dropbox/CSE569/MNIST_dataset')
+    images, labels = mndata.load_training()
+    selected_img = []
+    selected_labels = []
+    selected_idxs = random.sample(range(0, len(images)), 5000)
+    for i in range(0, len(selected_idxs)):
+        # newPoint = [float(j) for j in images[selected_idxs[i]]]
+        # selected_img.append(newPoint)
+        selected_img.append(images[selected_idxs[i]])
+        selected_labels.append(labels[selected_idxs[i]])
+    return selected_img, selected_labels
+
+
 
 def get_NN(datapoint, dataset):
     ranking = sorted(dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(datapoint)), reverse=False)
