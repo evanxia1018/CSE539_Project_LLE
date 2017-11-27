@@ -4,6 +4,8 @@ from scipy.sparse import csr_matrix
 from scipy.spatial.distance import cdist
 # from sklearn.neighbors import NearestNeighbors
 
+import sklearn.manifold
+
 """
 The Locally Linear Embedding Algorithm
 """
@@ -26,17 +28,18 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
     Return
     -------
     Y : numpy array
-        Dimension-reduced data, shape [n_samples, t_dimensions].
+        dimension-reduced data, shape [n_samples, t_dimensions].
     """
 
     # check X data: must be a 2-D numpy array, must be np.float64
     if not isinstance(X, np.ndarray) or X.ndim != 2:
-        raise TypeError("Your input data is not a 2-D numpy array")
+        raise TypeError("Your input data is NOT a 2-D numpy array")
     if X.dtype != np.float64:
-        raise ValueError("Your input data is not type: numpy.float64")
+        raise TypeError("Your input data is NOT type: numpy.float64")
 
     n_samples, n_features = X.shape
 
+    # check Parameters
     if t_dimensions > n_features or t_dimensions < 1:
         raise ValueError("Your input does NOT satisfy: 1 <= output dimension <= input dimension")
     if k_neighbors >= n_samples or k_neighbors <= 0:
@@ -45,11 +48,10 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
     k_take = k_neighbors + 1
 
     # step 1, compute the k nearest neighbors of each point
-    # dists = cdist(X, X)
     idx = np.argpartition(cdist(X, X), (1, k_take), axis=0)[1:k_take].T
 
     # step 1, compute the k-nn of each point (using scikit-learn)
-    # knn = NearestNeighbors(k_take, n_jobs=1).fit(X)
+    # knn = NearestNeighbors(k_take).fit(X)
     # idx = knn.kneighbors(X, return_distance=False)[:, 1:]
 
     Z = X[idx].transpose(0, 2, 1) # own implementation
@@ -65,35 +67,38 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
         # each neighbors - this point
         D = P.T - X[i]
 
-        # G is the local covariance matrix
+        # Cov is the local covariance matrix
         Cov = np.dot(D, D.T)
 
         # regularization
         # Cov = Cov + eye(K,K) * factor * (Cov.trace > 0 ? Cov.trace : 1)
-        trace = np.trace(Cov)
         r = reg_factor
+        trace = np.trace(Cov)
         if trace > 0:
             r *= trace
         Cov.flat[::k_take] += r # add the reg factor to the main diagonal of Cov
 
         # find the weights of each neighbors
-        w = solve(Cov, Ones, assume_a='pos')
+        w = solve(Cov, Ones, overwrite_a=True, assume_a='pos')
 
-        # sum(w) = 1
+        # make sum(w) = 1
         Weights[i, :] = w / np.sum(w)
 
     # put the Weights in to a sparse matrix
-    indptr = np.arange(0, n_samples * k_neighbors + 1, k_neighbors)
-    W = csr_matrix((Weights.ravel(), idx.ravel(), indptr), shape=(n_samples, n_samples))
+    W = csr_matrix(
+            (Weights.ravel(),
+            idx.ravel(),
+            np.arange(0, n_samples * k_neighbors + 1, k_neighbors)),
+            shape = (n_samples, n_samples) )
 
     # Step 3 compute M = (I-W)'(I-W)
-    M = (W.T * W - W.T - W).toarray()
+    M = (W.T * W - W - W.T).toarray()
     M.flat[::n_samples + 1] += 1
 
     # Step 4 compute the eigen_values and eigen_vectors of M
     eigen_values, eigen_vectors = eigh(M, eigvals=(1, t_dimensions), overwrite_a=True)
 
-    # Step 5 the first d+1 eigen_vectors is the output
+    # Step 5 the 2nd to the d+1'th eigen_vectors is the output
     return eigen_vectors[:, np.argsort(np.abs(eigen_values))]
 
 def main():
@@ -101,6 +106,10 @@ def main():
     print("The input data:")
     print(X) # for test only
     Y = locally_linear_embedding(X, 2, 2)
+    print("The output data:")
+    print(Y) # for test only
+
+    Y = sklearn.manifold.locally_linear_embedding(X, 2, 2)
     print("The output data:")
     print(Y) # for test only
 
