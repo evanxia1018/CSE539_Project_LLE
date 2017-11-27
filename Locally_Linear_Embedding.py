@@ -4,7 +4,6 @@ from scipy.sparse import csr_matrix
 from scipy.spatial.distance import cdist
 # from sklearn.neighbors import NearestNeighbors
 
-import sklearn.manifold
 
 """
 The Locally Linear Embedding Algorithm

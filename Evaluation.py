@@ -40,7 +40,7 @@ def get_trustworthiness(reduced_dataset, original_dataset, k):
             original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
             if (reduced_rank <= k) and (original_rank > k):
                 rank_sum += original_rank - k
-    print(rank_sum)
+    # print(rank_sum)
     result = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * rank_sum
     return result
 
