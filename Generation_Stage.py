@@ -3,13 +3,14 @@ import Evaluation as evaluation
 import MyLLE as lle
 import numpy as np
 import pickle as pk
-
+import time
 
 def run():
     # Following are the code for stage 1: Datasets creation and reduction
     # Please note that stage 1 must be done before stage 2
-    print(
-        "Stage 1: creating the five artificial dataset and reading the MNIST natural dataset, then generate datasets with reduced dimentionality, using LLE and PCA\n")
+    localtime = time.asctime(time.localtime(time.time()))
+    print("Local current time :", localtime)
+    print("Stage 1: creating the five artificial dataset and reading the MNIST natural dataset, then generate datasets with reduced dimentionality, using LLE and PCA\n")
 
     # Note running 5000 samples may take awfully long time, while 1000 samples takes only around 30 mins.
     print("Now generating the five artificial datasets and reading the MNIST dataset")
@@ -70,6 +71,8 @@ def run():
         lle_reduced_datasets_under_diff_k.append(curr_k_results)
     pk.dump(lle_reduced_datasets_under_diff_k, open('lle_reduced_datasets_under_diff_k.p', 'wb'))
     print("Finished \n")
+    localtime = time.asctime(time.localtime(time.time()))
+    print("Local current time :", localtime)
     # ************************ End of the stage 1
 
 
