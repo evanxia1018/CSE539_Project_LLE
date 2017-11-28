@@ -15,38 +15,69 @@ def pca_dim_reduction(input_data, target_dim):
     return reduced_dataset
 
 
-def get_trustworthiness(reduced_dataset, original_dataset, k):
-    rank_sum = 0
-    n = len(reduced_dataset)
-    for i in range(0, n):
-        curr_point = reduced_dataset[i]
-        curr_point_neib_ranking = sorted(reduced_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(curr_point)), reverse=False)
-        curr_point_neib_ranking_mapping = dict()
-        for i_2 in range(1, n):
-            curr_point_neib_ranking_mapping[str(curr_point_neib_ranking[i_2])] = i_2
-        original_curr_point = original_dataset[i]
-        original_curr_point_neib_ranking = sorted(original_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(original_curr_point)), reverse=False)
-        original_curr_point_neib_ranking_mapping = dict()
-        for i_2 in range(1, n):
-            original_curr_point_neib_ranking_mapping[str(original_curr_point_neib_ranking[i_2])] = i_2
-        for j in range(0, n):
-            if i == j:
-                continue
-            # reduced_rank = get_rank(curr_point, reduced_dataset[j], reduced_dataset)
-            # reduced_rank = curr_point_neib_ranking.index(reduced_dataset[j])
-            reduced_rank = curr_point_neib_ranking_mapping[str(reduced_dataset[j])]
-            # original_rank = get_rank(original_curr_point, original_dataset[j], original_dataset)
-            # original_rank = original_curr_point_neib_ranking.index(original_dataset[j])
-            original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
-            if (reduced_rank <= k) and (original_rank > k):
-                rank_sum += original_rank - k
-    # print(rank_sum)
-    result = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * rank_sum
-    return result
+# def get_trustworthiness(reduced_dataset, original_dataset, k):
+#     rank_sum = 0
+#     n = len(reduced_dataset)
+#     for i in range(0, n):
+#         curr_point = reduced_dataset[i]
+#         curr_point_neib_ranking = sorted(reduced_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(curr_point)), reverse=False)
+#         curr_point_neib_ranking_mapping = dict()
+#         for i_2 in range(1, n):
+#             curr_point_neib_ranking_mapping[str(curr_point_neib_ranking[i_2])] = i_2
+#         original_curr_point = original_dataset[i]
+#         original_curr_point_neib_ranking = sorted(original_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(original_curr_point)), reverse=False)
+#         original_curr_point_neib_ranking_mapping = dict()
+#         for i_2 in range(1, n):
+#             original_curr_point_neib_ranking_mapping[str(original_curr_point_neib_ranking[i_2])] = i_2
+#         for j in range(0, n):
+#             if i == j:
+#                 continue
+#             # reduced_rank = get_rank(curr_point, reduced_dataset[j], reduced_dataset)
+#             # reduced_rank = curr_point_neib_ranking.index(reduced_dataset[j])
+#             reduced_rank = curr_point_neib_ranking_mapping[str(reduced_dataset[j])]
+#             # original_rank = get_rank(original_curr_point, original_dataset[j], original_dataset)
+#             # original_rank = original_curr_point_neib_ranking.index(original_dataset[j])
+#             original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
+#             if (reduced_rank <= k) and (original_rank > k):
+#                 rank_sum += original_rank - k
+#     # print(rank_sum)
+#     result = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * rank_sum
+#     return result
+#
+#
+# def get_continuity(reduced_dataset, original_dataset, k):
+#     rank_sum = 0
+#     n = len(reduced_dataset)
+#     for i in range(0, n):
+#         curr_point = reduced_dataset[i]
+#         curr_point_neib_ranking = sorted(reduced_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(curr_point)), reverse=False)
+#         curr_point_neib_ranking_mapping = dict()
+#         for i_2 in range(1, n):
+#             curr_point_neib_ranking_mapping[str(curr_point_neib_ranking[i_2])] = i_2
+#         original_curr_point = original_dataset[i]
+#         original_curr_point_neib_ranking = sorted(original_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(original_curr_point)), reverse=False)
+#         original_curr_point_neib_ranking_mapping = dict()
+#         for i_2 in range(1, n):
+#             original_curr_point_neib_ranking_mapping[str(original_curr_point_neib_ranking[i_2])] = i_2
+#         for j in range(0, n):
+#             if i == j:
+#                 continue
+#             # reduced_rank = get_rank(curr_point, reduced_dataset[j], reduced_dataset)
+#             # reduced_rank = curr_point_neib_ranking.index(reduced_dataset[j])
+#             reduced_rank = curr_point_neib_ranking_mapping[str(reduced_dataset[j])]
+#             # original_rank = get_rank(original_curr_point, original_dataset[j], original_dataset)
+#             # original_rank = original_curr_point_neib_ranking.index(original_dataset[j])
+#             original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
+#             if (reduced_rank > k) and (original_rank <= k):
+#                 rank_sum += reduced_rank - k
+#     # print(rank_sum)
+#     result = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * rank_sum
+#     return result
 
 
-def get_continuity(reduced_dataset, original_dataset, k):
-    rank_sum = 0
+def get_trustworthiness_and_continuity(reduced_dataset, original_dataset, k):
+    continuity_rank_sum = 0
+    trustworthiness_rank_sum = 0
     n = len(reduced_dataset)
     for i in range(0, n):
         curr_point = reduced_dataset[i]
@@ -69,10 +100,16 @@ def get_continuity(reduced_dataset, original_dataset, k):
             # original_rank = original_curr_point_neib_ranking.index(original_dataset[j])
             original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
             if (reduced_rank > k) and (original_rank <= k):
-                rank_sum += reduced_rank - k
+                continuity_rank_sum += reduced_rank - k
+            if (reduced_rank <= k) and (original_rank > k):
+                trustworthiness_rank_sum += original_rank - k
     # print(rank_sum)
-    result = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * rank_sum
-    return result
+    trustworthiness = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * trustworthiness_rank_sum
+    continuity = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * continuity_rank_sum
+    return trustworthiness, continuity
+
+
+
 
 
 def get_generalization_error(reduced_dataset, original_dataset, dataset_labels): # first 80% data to be training set and last 20% data to be testing set
