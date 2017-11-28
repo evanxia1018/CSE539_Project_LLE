@@ -49,17 +49,13 @@ def run():
     print("Finished! \n")
 
     lle_reduced_datasets_under_diff_k = []  # this list contains results under different k parameter, where idx i is the result for k = i + 5
-    print(
-        "Now using LLE to reduce dimensionality of each dataset. Note that the parameter k ranges from 5 to 15 so this step is gonna take a while")
+    print("Now using LLE to reduce dimensionality of each dataset. Note that the parameter k ranges from 5 to 15 so this step is gonna take a while")
     for k in range(5, 16):
         curr_k_results = []
-        lle_reduced_swiss_roll = lle.locally_linear_embedding(np.array(swiss_roll_dataset, np.float64), k, 2)[
-            0].tolist()
+        lle_reduced_swiss_roll = lle.locally_linear_embedding(np.array(swiss_roll_dataset, np.float64), k, 2)[0].tolist()
         lle_reduced_helix = lle.locally_linear_embedding(np.array(helix_dataset, np.float64), k, 1)[0].tolist()
-        lle_reduced_twin_peaks = lle.locally_linear_embedding(np.array(twin_peaks_dataset, np.float64), k, 2)[
-            0].tolist()
-        lle_reduced_broken_swiss = lle.locally_linear_embedding(np.array(broken_swiss_dataset, np.float64), k, 2)[
-            0].tolist()
+        lle_reduced_twin_peaks = lle.locally_linear_embedding(np.array(twin_peaks_dataset, np.float64), k, 2)[0].tolist()
+        lle_reduced_broken_swiss = lle.locally_linear_embedding(np.array(broken_swiss_dataset, np.float64), k, 2)[0].tolist()
         lle_reduced_hd = lle.locally_linear_embedding(np.array(hd_dataset, np.float64), k, 5)[0].tolist()
         lle_reduced_MNIST_images = lle.locally_linear_embedding(np.array(MNIST_images, np.float64), k, 20)[0].tolist()
         curr_k_results.append(lle_reduced_swiss_roll)
@@ -70,9 +66,11 @@ def run():
         curr_k_results.append(lle_reduced_MNIST_images)
         lle_reduced_datasets_under_diff_k.append(curr_k_results)
     pk.dump(lle_reduced_datasets_under_diff_k, open('lle_reduced_datasets_under_diff_k.p', 'wb'))
-    print("Finished \n")
+    print("Finished! \n")
     localtime = time.asctime(time.localtime(time.time()))
     print("Local current time :", localtime)
     # ************************ End of the stage 1
 
+
+run()
 
