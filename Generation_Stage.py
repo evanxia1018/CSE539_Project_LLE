@@ -65,12 +65,6 @@ def run():
                                 "twin_peaks": lle_reduced_twin_peaks,
                                 "broken_swiss_roll": lle_reduced_broken_swiss, "hd": lle_reduced_hd,
                                 "MNIST": lle_reduced_MNIST_images}
-        # curr_k_results.append(lle_reduced_swiss_roll)
-        # curr_k_results.append(lle_reduced_helix)
-        # curr_k_results.append(lle_reduced_twin_peaks)
-        # curr_k_results.append(lle_reduced_broken_swiss)
-        # curr_k_results.append(lle_reduced_hd)
-        # curr_k_results.append(lle_reduced_MNIST_images)
         lle_reduced_datasets_under_diff_k.append(curr_k_results)
     pk.dump(lle_reduced_datasets_under_diff_k, open('lle_reduced_datasets_under_diff_k.p', 'wb'))
     print("Finished! \n")
