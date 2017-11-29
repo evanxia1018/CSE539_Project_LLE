@@ -119,6 +119,7 @@ def get_broken_swiss_roll_dataset_with_label(numOfSamples):
 
 def get_helix_dataset(numOfSamples):
     sample_list = []
+    result = dict()
     for x in range(0, numOfSamples):
         # noise_test = random.random()
         # if noise_test < 0.1:  # Add gaussian noise

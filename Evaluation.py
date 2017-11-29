@@ -93,11 +93,7 @@ def get_trustworthiness_and_continuity(reduced_dataset, original_dataset, k):
         for j in range(0, n):
             if i == j:
                 continue
-            # reduced_rank = get_rank(curr_point, reduced_dataset[j], reduced_dataset)
-            # reduced_rank = curr_point_neib_ranking.index(reduced_dataset[j])
             reduced_rank = curr_point_neib_ranking_mapping[str(reduced_dataset[j])]
-            # original_rank = get_rank(original_curr_point, original_dataset[j], original_dataset)
-            # original_rank = original_curr_point_neib_ranking.index(original_dataset[j])
             original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
             if (reduced_rank > k) and (original_rank <= k):
                 continuity_rank_sum += reduced_rank - k
@@ -112,7 +108,7 @@ def get_trustworthiness_and_continuity(reduced_dataset, original_dataset, k):
 
 
 
-def get_generalization_error(reduced_dataset, original_dataset, dataset_labels): # first 80% data to be training set and last 20% data to be testing set
+def get_generalization_error(reduced_dataset, dataset_labels): # first 80% data to be training set and last 20% data to be testing set
     reduced_dataset_mapping = dict()
     wrong_predict_count = 0
     n = len(reduced_dataset)
