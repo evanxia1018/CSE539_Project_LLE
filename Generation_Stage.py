@@ -5,6 +5,7 @@ import numpy as np
 import pickle as pk
 import time
 
+
 def run():
     # Following are the code for stage 1: Datasets creation and reduction
     # Please note that stage 1 must be done before stage 2
@@ -14,11 +15,11 @@ def run():
 
     # Note running 5000 samples may take awfully long time, while 1000 samples takes only around 30 mins.
     print("Now generating the five artificial datasets and reading the MNIST dataset")
-    swiss_roll_dataset = dg.get_swiss_roll_dataset(1000)
-    helix_dataset = dg.get_helix_dataset(1000)
-    twin_peaks_dataset = dg.get_twin_peaks(1000)
-    broken_swiss_dataset = dg.get_broken_swiss_roll_dataset(1000)
-    hd_dataset = dg.get_hd_dataset(1000)
+    swiss_roll_dataset, swiss_roll_labels = dg.get_swiss_roll_dataset_with_labels2(1000)
+    helix_dataset, helix_labels = dg.get_helix_dataset_with_label2(1000)
+    twin_peaks_dataset, twin_peak_labels = dg.get_twin_peaks_with_label2(1000)
+    broken_swiss_dataset, broken_swiss_labels = dg.get_broken_swiss_roll_dataset_with_label2(1000)
+    hd_dataset, hd_labels = dg.get_hd_dataset_with_label2(1000)
     MNIST_images, MNIST_labels = evaluation.get_natural_dataset_samples(1000)
     original_datasets = {"swiss_roll": swiss_roll_dataset, "helix": helix_dataset, "twin_peaks": twin_peaks_dataset,
                          "broken_swiss_roll": broken_swiss_dataset, "hd": hd_dataset, "MNIST": MNIST_images}
@@ -26,14 +27,8 @@ def run():
     print("Finished! \n")
 
     print("Now getting labels for all datasets")
-    swiss_roll_labels = evaluation.get_artificial_dataset_labels(swiss_roll_dataset)
-    helix_labels = evaluation.get_artificial_dataset_labels(helix_dataset)
-    twin_peak_labels = evaluation.get_artificial_dataset_labels(twin_peaks_dataset)
-    broken_swiss_labels = evaluation.get_artificial_dataset_labels(broken_swiss_dataset)
-    hd_labels = evaluation.get_artificial_dataset_labels(hd_dataset)
     datasets_labels = {"swiss_roll": swiss_roll_labels, "helix": helix_labels, "twin_peaks": twin_peak_labels,
                          "broken_swiss_roll": broken_swiss_labels, "hd": hd_labels, "MNIST": MNIST_labels}
-    # datasets_labels = [swiss_roll_labels, helix_labels, twin_peak_labels, broken_swiss_labels, hd_labels, MNIST_labels]
     pk.dump(datasets_labels, open('datasets_labels.p', 'wb'))
     print("Finished! \n")
 
