@@ -7,7 +7,7 @@ import numpy as np
 """
 Constants
 """
-variance = 0.025
+variance = 0.05
 
 CHECKERBOARD_SIZE = 0.2
 
@@ -38,27 +38,6 @@ def get_swiss_roll_dataset(numOfSamples):
         label_list.append(label)
     return sample_list, label_list
 
-def get_swiss_roll_dataset_with_labels(numOfSamples):
-    sample_list = []
-    label_list = []
-    for i in range(0, numOfSamples):
-        p_i = random.random()
-        q_i = random.random()
-        t_i = math.pi * 1.5 * (1 + 2 * p_i)
-
-        loc_p = int(p_i / CHECKERBOARD_SIZE) % 2
-        loc_q = int(q_i / CHECKERBOARD_SIZE) % 2
-        if (loc_p == loc_q):
-            label = 1
-        else:
-            lable = -1
-
-        x_i = [np.random.normal(t_i * math.cos(t_i), variance),
-               np.random.normal(t_i * math.sin(t_i), variance),
-               np.random.normal(30 * q_i, variance),]
-        sample_list.append(x_i)
-        label_list.append(label)
-    return sample_list, label_list
 
 def get_swiss_roll_dataset_with_labels2(n):
     t = (3 * math.pi / 2) * (1 + 2 * np.random.random(n))
@@ -91,30 +70,6 @@ def get_broken_swiss_roll_dataset(numOfSamples):
         sample_list.append(x_i)
     return sample_list
 
-def get_broken_swiss_roll_dataset_with_label(numOfSamples):
-    sample_list = []
-    label_list = []
-    for x in range(0, numOfSamples):
-        while True:
-            p_i = random.random()
-            q_i = random.random()
-            t_i = math.pi * 1.5 * (1 + 2 * p_i)
-            if p_i >= (4 / 5) or p_i <= (2 / 5):
-                break
-
-        loc_p = int(p_i / CHECKERBOARD_SIZE) % 2
-        loc_q = int(q_i / CHECKERBOARD_SIZE) % 2
-        if (loc_p == loc_q):
-            label = 1
-        else:
-            label = -1
-
-        x_i = [np.random.normal(t_i * math.cos(t_i), variance),
-               np.random.normal(t_i * math.sin(t_i), variance),
-               np.random.normal(30 * q_i, variance)]
-        sample_list.append(x_i)
-        label_list.append(label)
-    return sample_list, label_list
 
 def get_broken_swiss_roll_dataset_with_label2(n):
     t1 = (3 * math.pi / 2) * (1 + 2 * np.random.random(n // 2) * 0.4)
@@ -143,25 +98,6 @@ def get_helix_dataset(numOfSamples):
         sample_list.append(x_i)
     return sample_list
 
-def get_helix_dataset_with_label(numOfSamples):
-    sample_list = []
-    label_list = []
-    for x in range(0, numOfSamples):
-        p_i = random.random()
-
-        loc_p = int(p_i / CHECKERBOARD_SIZE) * 2
-        if (loc_p == 0):
-            label = 1
-        else:
-            label = -1
-
-        x_i = [np.random.normal((2 + math.cos(8 * p_i)) * math.cos(p_i), variance),
-               np.random.normal((2 + math.cos(8 * p_i)) * math.sin(p_i), variance),
-               np.random.normal(math.sin(8 * p_i), variance)]
-        sample_list.append(x_i)
-        sample_list.append(label)
-
-    return sample_list, label_list
 
 def get_helix_dataset_with_label2(n):
     t = np.random.random(n) * 2 * math.pi;
