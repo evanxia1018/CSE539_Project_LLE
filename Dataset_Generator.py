@@ -20,13 +20,6 @@ def get_swiss_roll_dataset(numOfSamples):
     sample_list = []
     label_list = []
     for x in range(0, numOfSamples):
-        # noise_test = random.random()
-        # if noise_test < 0.1:  # Add gaussian noise
-        #     noise_1 = numpy.random.normal(0, 0.1)
-        #     noise_2 = numpy.random.normal(0, 0.1)
-        #     noise_3 = numpy.random.normal(0, 0.1)
-        #     sample_list.append([noise_1, noise_2, noise_3])
-        #     continue
         p_i = random.random()
         q_i = random.random()
         t_i = math.pi * 3 / 2 * (1 + 2 * p_i)
@@ -50,13 +43,6 @@ def get_swiss_roll_dataset_with_labels2(n):
 def get_broken_swiss_roll_dataset(numOfSamples):
     sample_list = []
     for x in range(0, numOfSamples):
-        # noise_test = random.random()
-        # if noise_test < 0.1:  # Add gaussian noise
-        #     noise_1 = numpy.random.normal(0, 0.1)
-        #     noise_2 = numpy.random.normal(0, 0.1)
-        #     noise_3 = numpy.random.normal(0, 0.1)
-        #     sample_list.append([noise_1, noise_2, noise_3])
-        #     continue
         while True:
             p_i = random.random()
             q_i = random.random()
@@ -85,13 +71,7 @@ def get_helix_dataset(numOfSamples):
     sample_list = []
     result = dict()
     for x in range(0, numOfSamples):
-        # noise_test = random.random()
-        # if noise_test < 0.1:  # Add gaussian noise
-        #     noise_1 = numpy.random.normal(0, 0.1)
-        #     noise_2 = numpy.random.normal(0, 0.1)
-        #     noise_3 = numpy.random.normal(0, 0.1)
-        #     sample_list.append([noise_1, noise_2, noise_3])
-        #     continue
+
         p_i = random.random()
 
         x_i = [np.random.normal((2 + math.cos(8 * p_i)) * math.cos(p_i), variance), np.random.normal((2 + math.cos(8 * p_i)) * math.sin(p_i), variance), np.random.normal(math.sin(8 * p_i), variance)]
@@ -108,39 +88,12 @@ def get_helix_dataset_with_label2(n):
 def get_twin_peaks(numOfSamples):
     sample_list = []
     for x in range(0, numOfSamples):
-        # noise_test = random.random()
-        # if noise_test < 0.1:  # Add gaussian noise
-        #     noise_1 = numpy.random.normal(0, 0.1)
-        #     noise_2 = numpy.random.normal(0, 0.1)
-        #     noise_3 = numpy.random.normal(0, 0.1)
-        #     sample_list.append([noise_1, noise_2, noise_3])
-        #     continue
         p_i = random.random()
         q_i = random.random()
         x_i = [np.random.normal(1 - 2 * p_i, variance), np.random.normal(math.sin(math.pi - 2 * math.pi * p_i), variance), np.random.normal(math.tanh(3 - 6 * q_i), variance)]
         sample_list.append(x_i)
     return sample_list
 
-def get_twin_peaks_with_label(numOfSamples):
-    sample_list = []
-    label_list = []
-    for x in range(0, numOfSamples):
-        p_i = random.random()
-        q_i = random.random()
-
-        loc_p = int(p_i / CHECKERBOARD_SIZE) % 2
-        loc_q = int(q_i / CHECKERBOARD_SIZE) % 2
-        if (loc_p == loc_q):
-            label = 1
-        else:
-            label = -1
-
-        x_i = [np.random.normal(1 - 2 * p_i, variance),
-               np.random.normal(math.sin(math.pi - 2 * math.pi * p_i), variance),
-               np.random.normal(math.tanh(3 - 6 * q_i), variance)]
-        sample_list.append(x_i)
-        label_list.append(label)
-    return sample_list, label_list
 
 def get_twin_peaks_with_label2(n):
     p = 1 - 2 * np.random.random(n)
