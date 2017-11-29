@@ -73,5 +73,4 @@ def run():
     # ************************ End of the stage 1
 
 
-run()
 
