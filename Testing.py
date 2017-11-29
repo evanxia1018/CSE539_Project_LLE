@@ -185,3 +185,14 @@ reduced_dataset = reduced_dataset.tolist()
 trust = eval.get_trustworthiness(reduced_dataset, dataset, 12)
 continuity = eval.get_continuity(reduced_dataset, dataset, 12)
 
+
+# Following code evaluate the generalization error of original datasets
+import time
+import Evaluation as evaluation
+import pickle
+original_datasets = pickle.load(open('original_datasets.p', 'rb'))
+datasets_labels = pickle.load(open('datasets_labels.p', 'rb'))
+for key in original_datasets:
+    name = key
+    error = evaluation.get_generalization_error(original_datasets[key], datasets_labels[key])
+    print("The Generalization Error of the " + name + " is: " + str(error))
