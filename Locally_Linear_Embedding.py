@@ -14,13 +14,10 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
     ----------
     X : numpy array
         input data, shape [n_samples, n_features], dtype must be numpy.float64.
-
     k_neighbors : integer
         number of nearest neighbors to consider for each point.
-
     t_dimensions : integer
         number of dimensions in the output data.
-
     reg_factor : float
         regularization factor, for the case k_neighbors > n_features.
 
@@ -100,6 +97,9 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
     # Step 5 the 2nd to the d+1'th eigen_vectors is the output
     return eigen_vectors[:, np.argsort(np.abs(eigen_values))]
 
+"""
+main function just for testing the algorithm
+"""
 def main():
     X = np.arange(10).reshape(5,2).astype(np.float64)
     print("The input data:")
