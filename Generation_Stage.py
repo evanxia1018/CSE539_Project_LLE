@@ -20,7 +20,7 @@ def run():
     twin_peaks_dataset, twin_peak_labels = dg.get_twin_peaks_with_label2(1000)
     broken_swiss_dataset, broken_swiss_labels = dg.get_broken_swiss_roll_dataset_with_label2(1000)
     hd_dataset, hd_labels = dg.get_hd_dataset_with_label2(1000)
-    MNIST_images, MNIST_labels = evaluation.get_natural_dataset_samples(1000)
+    MNIST_images, MNIST_labels = evaluation.get_natural_dataset_samples(5000)
     original_datasets = {"swiss_roll": swiss_roll_dataset, "helix": helix_dataset, "twin_peaks": twin_peaks_dataset,
                          "broken_swiss_roll": broken_swiss_dataset, "hd": hd_dataset, "MNIST": MNIST_images}
     pk.dump(original_datasets, open('original_datasets.p', 'wb'))

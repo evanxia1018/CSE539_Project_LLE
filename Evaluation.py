@@ -1,6 +1,6 @@
 from matplotlib.mlab import PCA
 import numpy as np
-
+from sklearn.neighbors import NearestNeighbors
 
 def pca_dim_reduction(input_data, target_dim):
     reduced_dataset = []
@@ -75,26 +75,62 @@ def pca_dim_reduction(input_data, target_dim):
 #     return result
 
 
+# def get_trustworthiness_and_continuity(reduced_dataset, original_dataset, k):
+#     continuity_rank_sum = 0
+#     trustworthiness_rank_sum = 0
+#     n = len(reduced_dataset)
+#     for i in range(0, n):
+#         curr_point = reduced_dataset[i]
+#         curr_point_neib_ranking = sorted(reduced_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(curr_point)), reverse=False)
+#         curr_point_neib_ranking_mapping = dict()
+#         for i_2 in range(1, n):
+#             curr_point_neib_ranking_mapping[str(curr_point_neib_ranking[i_2])] = i_2
+#         original_curr_point = original_dataset[i]
+#         original_curr_point_neib_ranking = sorted(original_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(original_curr_point)), reverse=False)
+#         original_curr_point_neib_ranking_mapping = dict()
+#         for i_2 in range(1, n):
+#             original_curr_point_neib_ranking_mapping[str(original_curr_point_neib_ranking[i_2])] = i_2
+#         for j in range(0, n):
+#             if i == j:
+#                 continue
+#             reduced_rank = curr_point_neib_ranking_mapping[str(reduced_dataset[j])]
+#             original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
+#             if (reduced_rank > k) and (original_rank <= k):
+#                 continuity_rank_sum += reduced_rank - k
+#             if (reduced_rank <= k) and (original_rank > k):
+#                 trustworthiness_rank_sum += original_rank - k
+#     # print(rank_sum)
+#     trustworthiness = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * trustworthiness_rank_sum
+#     continuity = 1 - (2 / (n * k * (2 * n - 3 * k - 1))) * continuity_rank_sum
+#     return trustworthiness, continuity
+
+
 def get_trustworthiness_and_continuity(reduced_dataset, original_dataset, k):
     continuity_rank_sum = 0
     trustworthiness_rank_sum = 0
     n = len(reduced_dataset)
+    reduced_X = np.array(reduced_dataset)
+    reduced_nbrs = NearestNeighbors(n_neighbors=n - 1, algorithm='auto').fit(reduced_X)
+    reduced_distances, reduced_indices = reduced_nbrs.kneighbors(reduced_X)
+    original_X = np.array(original_dataset)
+    original_nbrs = NearestNeighbors(n_neighbors=n - 1, algorithm='auto').fit(original_X)
+    original_distances, original_indices = original_nbrs.kneighbors(original_X)
     for i in range(0, n):
-        curr_point = reduced_dataset[i]
-        curr_point_neib_ranking = sorted(reduced_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(curr_point)), reverse=False)
-        curr_point_neib_ranking_mapping = dict()
-        for i_2 in range(1, n):
-            curr_point_neib_ranking_mapping[str(curr_point_neib_ranking[i_2])] = i_2
-        original_curr_point = original_dataset[i]
-        original_curr_point_neib_ranking = sorted(original_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(original_curr_point)), reverse=False)
-        original_curr_point_neib_ranking_mapping = dict()
-        for i_2 in range(1, n):
-            original_curr_point_neib_ranking_mapping[str(original_curr_point_neib_ranking[i_2])] = i_2
+        # curr_point = reduced_dataset[i]
+        # curr_point_neib_ranking = sorted(reduced_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(curr_point)), reverse=False)
+        # curr_point_neib_ranking_mapping = dict()
+        # for i_2 in range(1, n):
+        #     curr_point_neib_ranking_mapping[str(curr_point_neib_ranking[i_2])] = i_2
+        # original_curr_point = original_dataset[i]
+        # original_curr_point_neib_ranking = sorted(original_dataset, key=lambda l: np.linalg.norm(np.array(l) - np.array(original_curr_point)), reverse=False)
+        # original_curr_point_neib_ranking_mapping = dict()
+        # for i_2 in range(1, n):
+        #     original_curr_point_neib_ranking_mapping[str(original_curr_point_neib_ranking[i_2])] = i_2
         for j in range(0, n):
             if i == j:
                 continue
-            reduced_rank = curr_point_neib_ranking_mapping[str(reduced_dataset[j])]
-            original_rank = original_curr_point_neib_ranking_mapping[str(original_dataset[j])]
+            reduced_rank = np.where(reduced_indices[i] == j)[0]
+            original_rank = np.where(original_indices[i] == j)[0]
             if (reduced_rank > k) and (original_rank <= k):
                 continuity_rank_sum += reduced_rank - k
             if (reduced_rank <= k) and (original_rank > k):
@@ -105,25 +141,25 @@ def get_trustworthiness_and_continuity(reduced_dataset, original_dataset, k):
     return trustworthiness, continuity
 
 
-
-
-
-def get_generalization_error(reduced_dataset, dataset_labels): # first 80% data to be training set and last 20% data to be testing set
-    reduced_dataset_mapping = dict()
+def get_generalization_error(reduced_dataset, dataset_labels): # leave-one-out
+    # reduced_dataset_mapping = dict()
     wrong_predict_count = 0
+    X = np.array(reduced_dataset)
+    nbrs = NearestNeighbors(n_neighbors=2, algorithm='auto').fit(X)
+    distances, indices = nbrs.kneighbors(X)
     n = len(reduced_dataset)
-    for i in range(0, len(reduced_dataset)):
-        reduced_dataset_mapping[str(reduced_dataset[i])] = i
-    # dataset_labels = get_artificial_dataset_labels(original_dataset)
-    for i in range(int(n * 0.8), n):
+    # for i in range(0, len(reduced_dataset)):
+    #     reduced_dataset_mapping[str(reduced_dataset[i])] = i
+    for i in range(0, n):
         curr = reduced_dataset[i]
-        curr_NN = get_NN(curr, reduced_dataset[:int(n * 0.8)])
-        curr_NN_idx = reduced_dataset_mapping[str(curr_NN)]
+        curr_NN_idx = indices[i][1]
+        # curr_NN = get_NN(curr, reduced_dataset)
+        # curr_NN_idx = reduced_dataset_mapping[str(curr_NN)]
         curr_predict = dataset_labels[curr_NN_idx]
         ground_truth = dataset_labels[i]
         if curr_predict != ground_truth:
             wrong_predict_count += 1
-    return wrong_predict_count / (n * 0.2)
+    return wrong_predict_count / n
 
 
 def get_artificial_dataset_labels(dataset):
