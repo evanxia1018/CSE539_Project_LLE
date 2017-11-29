@@ -63,9 +63,9 @@ def get_swiss_roll_dataset_with_labels(numOfSamples):
 def get_swiss_roll_dataset_with_labels2(numOfSamples):
     t = (3 * math.pi / 2) * (1 + 2 * np.random.random(numOfSamples))
     height = 30 * np.random.random(numOfSamples)
-    X = np.array([np.dot(t,np.cos(t)), height, np.dot(t, np.sin(t))]) + variance * np.random.normal(0, 1, numOfSamples * 3).reshape(3, numOfSamples)
+    X = np.array([t * np.cos(t), height, t * np.sin(t)]) + variance * np.random.normal(0, 1, numOfSamples * 3).reshape(3, numOfSamples)
     labels = np.fmod(np.around(t / 2) + np.around(height / 12), 2)
-    return X, labels
+    return X.T, labels.reshape(numOfSamples,1)
 
 
 def get_broken_swiss_roll_dataset(numOfSamples):
