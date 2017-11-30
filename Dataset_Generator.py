@@ -212,3 +212,11 @@ def get_hd_dataset_with_label2(n):
     X += variance * np.random.normal(0, 1, n * 10).reshape(10, n)
     labels = np.fmod(np.around(x1) + np.around(x2) + np.around(x3) + np.around(x4) + np.around(x5) + 1, 2)
     return X.T.tolist(), labels.reshape(n, 1).tolist()
+
+def get_hd_dataset_with_label2_2(n):
+    seed = np.random.random(math.ceil(math.pow(n, 1/5)))
+    A = np.array([p for p in itertools.product(seed, repeat = 5)][0:n]).T
+    X = [np.cos(A[0]), np.tanh(3 * A[1]), A[0] + A[2], A[3] * np.sin(A[1]), np.sin(A[0] + A[4]), A[4] * np.cos(A[1]), A[4] + A[3], A[1], A[2] * A[3], A[0]]
+    X += variance * np.random.normal(0, 1, n * 10).reshape(10, n)
+    labels = np.fmod(np.around(A[0]) + np.around(A[1]) + np.around(A[2]) + np.around(A[3]) + np.around(A[4]) + 1, 2)
+    return X.T.tolist(), labels.reshape(n, 1).tolist()
