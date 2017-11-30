@@ -196,3 +196,31 @@ for key in original_datasets:
     name = key
     error = evaluation.get_generalization_error(original_datasets[key], datasets_labels[key])
     print("The Generalization Error of the " + name + " is: " + str(error))
+
+
+# Plot all original datasets with labels
+import time
+import Evaluation as evaluation
+import pickle
+import Plot_Graph as pg
+original_datasets = pickle.load(open('original_datasets.p', 'rb'))
+datasets_labels = pickle.load(open('datasets_labels.p', 'rb'))
+pca_reduced_datasets = pickle.load(open('pca_reduced_datasets.p', 'rb'))
+lle_reduced_datasets_under_diff_k = pickle.load(open('lle_reduced_datasets_under_diff_k.p', 'rb'))
+for key in original_datasets:
+    pg.plot3D_color(original_datasets[key], datasets_labels[key])
+
+
+# Plot lle_reduced datasets with k == 12
+import time
+import Evaluation as evaluation
+import pickle
+import Plot_Graph as pg
+original_datasets = pickle.load(open('original_datasets.p', 'rb'))
+datasets_labels = pickle.load(open('datasets_labels.p', 'rb'))
+pca_reduced_datasets = pickle.load(open('pca_reduced_datasets.p', 'rb'))
+lle_reduced_datasets_under_diff_k = pickle.load(open('lle_reduced_datasets_under_diff_k.p', 'rb'))
+for key in lle_reduced_datasets_under_diff_k[7]:
+    pg.plot3D_color(lle_reduced_datasets_under_diff_k[7][key], lle_reduced_datasets_under_diff_k[7][key])
+
+

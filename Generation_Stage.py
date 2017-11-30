@@ -15,11 +15,11 @@ def run():
 
     # Note running 5000 samples may take awfully long time, while 1000 samples takes only around 30 mins.
     print("Now generating the five artificial datasets and reading the MNIST dataset")
-    swiss_roll_dataset, swiss_roll_labels = dg.get_swiss_roll_dataset_with_labels2(1000)
-    helix_dataset, helix_labels = dg.get_helix_dataset_with_label2(1000)
-    twin_peaks_dataset, twin_peak_labels = dg.get_twin_peaks_with_label2(1000)
-    broken_swiss_dataset, broken_swiss_labels = dg.get_broken_swiss_roll_dataset_with_label2(1000)
-    hd_dataset, hd_labels = dg.get_hd_dataset_with_label2(1000)
+    swiss_roll_dataset, swiss_roll_labels = dg.get_swiss_roll_dataset_with_labels2(5000)
+    helix_dataset, helix_labels = dg.get_helix_dataset_with_label2(5000)
+    twin_peaks_dataset, twin_peak_labels = dg.get_twin_peaks_with_label2(5000)
+    broken_swiss_dataset, broken_swiss_labels = dg.get_broken_swiss_roll_dataset_with_label2(5000)
+    hd_dataset, hd_labels = dg.get_hd_dataset_with_label2(5000)
     MNIST_images, MNIST_labels = evaluation.get_natural_dataset_samples(5000)
     original_datasets = {"swiss_roll": swiss_roll_dataset, "helix": helix_dataset, "twin_peaks": twin_peaks_dataset,
                          "broken_swiss_roll": broken_swiss_dataset, "hd": hd_dataset, "MNIST": MNIST_images}

@@ -24,6 +24,20 @@ def plot3D_color(data, labels):
     ax.set_xlabel('Z Label')
     plt.show()
 
+
+def plot2D_color(data, labels):
+    x1 = data[labels[:, 0] == 1, 0]
+    y1 = data[labels[:, 0] == 1, 1]
+    x0 = data[labels[:, 0] == 0, 0]
+    y0 = data[labels[:, 0] == 0, 1]
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='2d')
+    ax.scatter(x1, y1)
+    ax.scatter(x0, y0)
+    ax.set_xlabel('X Label')
+    ax.set_xlabel('Y Label')
+    plt.show()
+
 def get_twin_peaks_with_label2(n):
     p = 1 - 2 * np.random.random(n)
     q = 1 - 2 * np.random.random(n)
