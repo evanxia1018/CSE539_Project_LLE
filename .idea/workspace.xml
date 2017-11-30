@@ -2,16 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="30e0cc53-0ac3-48af-88b7-d1c8307b117b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/datasets_labels.p" afterPath="$PROJECT_DIR$/datasets_labels.p" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lle_reduced_datasets_under_diff_k.p" afterPath="$PROJECT_DIR$/lle_reduced_datasets_under_diff_k.p" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/original_datasets.p" afterPath="$PROJECT_DIR$/original_datasets.p" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pca_reduced_datasets.p" afterPath="$PROJECT_DIR$/pca_reduced_datasets.p" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dataset_Generator.py" afterPath="$PROJECT_DIR$/Dataset_Generator.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ForTestOnly.py" afterPath="$PROJECT_DIR$/ForTestOnly.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Generation_Stage.py" afterPath="$PROJECT_DIR$/Generation_Stage.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Plot_Graph.py" afterPath="$PROJECT_DIR$/Plot_Graph.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Testing.py" afterPath="$PROJECT_DIR$/Testing.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -34,11 +25,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Dataset_Generator.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Dataset_Generator.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Dataset_Generator.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-743">
-              <caret line="79" column="36" lean-forward="false" selection-start-line="79" selection-start-column="36" selection-end-line="79" selection-end-column="36" />
+            <state relative-caret-position="295">
+              <caret line="207" column="28" lean-forward="true" selection-start-line="207" selection-start-column="28" selection-end-line="207" selection-end-column="28" />
               <folding>
                 <element signature="e#19#32#0" expanded="true" />
               </folding>
@@ -61,8 +52,8 @@
       <file leaf-file-name="Plot_Graph.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Plot_Graph.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="28" column="30" lean-forward="false" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
+            <state relative-caret-position="480">
+              <caret line="32" column="14" lean-forward="true" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -70,7 +61,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Program.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Program.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Program.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="195">
@@ -193,9 +184,9 @@
         <option value="$PROJECT_DIR$/Generation_Stage.py" />
         <option value="$PROJECT_DIR$/Testing.py" />
         <option value="$PROJECT_DIR$/Dataset_Generator.py" />
-        <option value="$PROJECT_DIR$/Dataset_Generator.py" />
         <option value="$PROJECT_DIR$/ForTestOnly.py" />
         <option value="$PROJECT_DIR$/Plot_Graph.py" />
+        <option value="$PROJECT_DIR$/Dataset_Generator.py" />
       </list>
     </option>
   </component>
@@ -489,9 +480,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1680" height="1027" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17857143" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17857143" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32845187" sideWeight="0.50476193" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23979057" sideWeight="0.4952381" order="2" side_tool="false" content_ui="tabs" />
@@ -934,31 +924,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Dataset_Generator.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-743">
-          <caret line="79" column="36" lean-forward="false" selection-start-line="79" selection-start-column="36" selection-end-line="79" selection-end-column="36" />
-          <folding>
-            <element signature="e#19#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ForTestOnly.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="20" column="25" lean-forward="false" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Plot_Graph.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="28" column="30" lean-forward="false" selection-start-line="28" selection-start-column="30" selection-end-line="28" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -978,6 +948,26 @@
           <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Plot_Graph.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="14" lean-forward="true" selection-start-line="32" selection-start-column="14" selection-end-line="32" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dataset_Generator.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="207" column="28" lean-forward="true" selection-start-line="207" selection-start-column="28" selection-end-line="207" selection-end-column="28" />
+          <folding>
+            <element signature="e#19#32#0" expanded="true" />
           </folding>
         </state>
       </provider>
