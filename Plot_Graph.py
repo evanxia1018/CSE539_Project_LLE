@@ -41,11 +41,24 @@ def plot2D_color(data, labels):
     x0 = data[labels[:, 0] == 0, 0]
     y0 = data[labels[:, 0] == 0, 1]
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='2d')
-    ax.scatter(x1, y1)
-    ax.scatter(x0, y0)
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(x1, y1, s=3)
+    ax.scatter(x0, y0, s=3)
     ax.set_xlabel('X Label')
     ax.set_xlabel('Y Label')
+    plt.show()
+
+
+def plot1D_color(data, labels):
+    data = np.array(data)
+    labels = np.array(labels)
+    x1 = data[labels[:, 0] == 1, 0]
+    x0 = data[labels[:, 0] == 0, 0]
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(x1, 0, s=3)
+    ax.scatter(x0, 0, s=3)
+    ax.set_xlabel('X Label')
     plt.show()
 
 
