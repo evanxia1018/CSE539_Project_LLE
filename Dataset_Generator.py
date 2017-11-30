@@ -147,8 +147,7 @@ def get_twin_peaks_with_label2(n):
     q = 1 - 2 * np.random.random(n)
     X = [p, q, np.sin(math.pi * p) * np.tanh(3 * q)] + variance * np.random.normal(0, 1, n * 3).reshape(3, n)
     X[2] *= 10
-<<<<<<< HEAD
-    labels = np.abs(np.fmod(np.sum(np.around((X.T + np.tile(np.amin(X, 1), (n, 1))) * 10), 1), 2))
+    labels = np.abs(np.fmod(np.sum(np.around((X.T + np.tile(np.amin(X, 1), (n, 1))) / 10), 1), 2))
     return X.T, labels.reshape(n, 1)
 
 def get_hd_dataset(numOfSamples):
@@ -174,7 +173,6 @@ def get_hd_dataset(numOfSamples):
         x_i = x_i.tolist()
         sample_list.append(x_i[0])
     return sample_list
-=======
     labels = np.fmod(np.sum(np.around((X.T + np.tile(np.amin(X, 1), (n, 1))) * 10), 1), 2)
     return X.T.tolist(), labels.reshape(n, 1).tolist()
 
@@ -201,7 +199,7 @@ def get_hd_dataset(numOfSamples):
 #         x_i = x_i.tolist()
 #         sample_list.append(x_i[0])
 #     return sample_list
->>>>>>> origin/master
+
 
 
 def get_hd_dataset_with_label2(n):
