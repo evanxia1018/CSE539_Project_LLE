@@ -41,9 +41,12 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
     if k_neighbors >= n_samples or k_neighbors <= 0:
         raise ValueError("Your input does NOT satisfy: 0 < k_neighbors < n_samples")
 
+    print("#### LLE algorithm started! ####")
+
     k_take = k_neighbors + 1
 
     # step 1, compute the k nearest neighbors of each point
+    print("\tStage 1: compute distance and find k-nearest neighbor")
     idx = np.argpartition(cdist(X, X), (1, k_take), axis=0)[1:k_take].T
 
     # step 1, compute the k-nn of each point (using scikit-learn)
@@ -53,6 +56,7 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
     Z = X[idx].transpose(0, 2, 1) # own implementation
 
     # step 2, compute co-variance matrix and then the weights
+    print("\tStage 2: construct the Weight matrix")
     # the Matrix to contain the Weights:
     Weights = np.empty((n_samples, k_neighbors), dtype=X.dtype)
     # the ALL-ONE vector:
@@ -92,25 +96,27 @@ def locally_linear_embedding(X, k_neighbors, t_dimensions, reg_factor=1e-3):
     M.flat[::n_samples + 1] += 1
 
     # Step 4 compute the eigen_values and eigen_vectors of M
+    print("\tStage 3: compute the eigenvectors and output")
     eigen_values, eigen_vectors = eigh(M, eigvals=(1, t_dimensions), overwrite_a=True)
 
     # Step 5 the 2nd to the d+1'th eigen_vectors is the output
+    print("#### LLE algorithm ended! ####")
     return eigen_vectors[:, np.argsort(np.abs(eigen_values))]
 
 """
 main function just for testing the algorithm
 """
 def main():
-    X = np.arange(10).reshape(5,2).astype(np.float64)
+    X = np.arange(10000).reshape(5000,2).astype(np.float64)
     print("The input data:")
     print(X) # for test only
     Y = locally_linear_embedding(X, 2, 2)
     print("The output data:")
     print(Y) # for test only
 
-    Y = sklearn.manifold.locally_linear_embedding(X, 2, 2)
-    print("The output data:")
-    print(Y) # for test only
+    # Y = sklearn.manifold.locally_linear_embedding(X, 2, 2)
+    # print("The output data:")
+    # print(Y) # for test only
 
     # D1 = get_hd_dataset(5000)
     # D2 = get_swiss_roll_dataset(5000)
