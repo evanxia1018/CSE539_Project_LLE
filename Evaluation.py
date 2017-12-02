@@ -179,7 +179,7 @@ def get_artificial_dataset_labels(dataset):
 def get_natural_dataset_samples(num_of_samples):
     from mnist import MNIST
     import random
-    mndata = MNIST('/Users/evanxia/Dropbox/CSE569/MNIST_dataset')
+    mndata = MNIST('MNIST_dataset')
     images, labels = mndata.load_training()
     selected_img = []
     selected_labels = []

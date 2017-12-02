@@ -40,6 +40,3 @@ def run():
     localtime = time.asctime(time.localtime(time.time()))
     print("Local current time :", localtime)
     print("Stage 2 finished!")
-
-
-

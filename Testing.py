@@ -220,12 +220,13 @@ original_datasets = pickle.load(open('original_datasets.p', 'rb'))
 datasets_labels = pickle.load(open('datasets_labels.p', 'rb'))
 pca_reduced_datasets = pickle.load(open('pca_reduced_datasets.p', 'rb'))
 lle_reduced_datasets_under_diff_k = pickle.load(open('lle_reduced_datasets_under_diff_k.p', 'rb'))
-for key in lle_reduced_datasets_under_diff_k[7]:
+k = 9
+for key in lle_reduced_datasets_under_diff_k[k - 5]:
     print(key)
     if key == "helix":
-        pg.plot1D_color(lle_reduced_datasets_under_diff_k[7][key], datasets_labels[key])
+        pg.plot1D_color(lle_reduced_datasets_under_diff_k[k - 5][key], datasets_labels[key])
     else:
-        pg.plot2D_color(lle_reduced_datasets_under_diff_k[7][key], datasets_labels[key])
+        pg.plot2D_color(lle_reduced_datasets_under_diff_k[k - 5][key], datasets_labels[key])
 
 
 
