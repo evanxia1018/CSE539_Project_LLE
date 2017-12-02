@@ -11,7 +11,7 @@ while True:
     option = input("\nPlease specify the task to perform:\n"
                    "1: Generate five artificial dataset and read MNIST_images dataset\n"
                    "2: Perform PCA to all artificial dataset and MNIST_images dataset\n"
-                   "3: Perform LLE 11 times, using parameter k = 5, 6, ..., 15, to all artificial dataset and MNIST_images dataset\n"
+                   "3: Perform LLE 11 * 6 times, using parameter k = 5, 6, ..., 15, to all artificial dataset and MNIST_images dataset\n"
                    "4: Do task 1, task 2 and task 3. This task will take about 20 min\n"
                    "5: Evaluate the data produced by PCA. This task will take about 40 min.\n"
                    "6: Evaluate the data produced by LLE. This task will take about 40 min.\n"
