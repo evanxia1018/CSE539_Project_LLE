@@ -4,3 +4,5 @@
 *.pyc
 
 __pycache__/Dataset_Generator.cpython-36.pyc
+
+*.xml

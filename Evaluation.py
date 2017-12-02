@@ -177,7 +177,8 @@ def get_artificial_dataset_labels(dataset):
 
 
 def get_natural_dataset_samples(num_of_samples):
-    from mnist import MNIST
+    from loader import MNIST
+
     import random
     mndata = MNIST('MNIST_dataset')
     images, labels = mndata.load_training()

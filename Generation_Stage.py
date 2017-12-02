@@ -4,6 +4,7 @@ import MyLLE as lle
 import numpy as np
 import pickle as pk
 import time
+import pickle
 
 
 def run():
@@ -68,4 +69,62 @@ def run():
     # ************************ End of the stage 1
 
 
+def generate_original_datasets():
+    print("Now generating the five artificial datasets and reading the MNIST dataset")
+    swiss_roll_dataset, swiss_roll_labels = dg.get_swiss_roll_dataset_with_labels2(5000)
+    helix_dataset, helix_labels = dg.get_helix_dataset_with_label2(5000)
+    twin_peaks_dataset, twin_peak_labels = dg.get_twin_peaks_with_label2(5000)
+    broken_swiss_dataset, broken_swiss_labels = dg.get_broken_swiss_roll_dataset_with_label2(5000)
+    hd_dataset, hd_labels = dg.get_hd_dataset_with_label2(5000)
+    MNIST_images, MNIST_labels = evaluation.get_natural_dataset_samples(5000)
+    original_datasets = {"swiss_roll": swiss_roll_dataset, "helix": helix_dataset, "twin_peaks": twin_peaks_dataset,
+                         "broken_swiss_roll": broken_swiss_dataset, "hd": hd_dataset, "MNIST": MNIST_images}
+    pk.dump(original_datasets, open('original_datasets.p', 'wb'))
+    print("Finished! \n")
 
+
+def perform_pca_to_original_datasets():
+    print("Now using PCA to reduce dimensionality of each dataset")
+    original_datasets = pickle.load(open('original_datasets.p', 'rb'))
+    swiss_roll_dataset = original_datasets["swiss_roll"]
+    helix_dataset = original_datasets["helix"]
+    twin_peaks_dataset = original_datasets["twin_peaks"]
+    broken_swiss_dataset = original_datasets["broken_swiss_roll"]
+    hd_dataset = original_datasets["hd"]
+    MNIST_images = original_datasets["MNIST"]
+    pca_reduced_swiss_roll = evaluation.pca_dim_reduction(swiss_roll_dataset, 2)
+    pca_reduced_helix = evaluation.pca_dim_reduction(helix_dataset, 1)
+    pca_reduced_twin_peaks = evaluation.pca_dim_reduction(twin_peaks_dataset, 2)
+    pca_reduced_broken_swiss = evaluation.pca_dim_reduction(broken_swiss_dataset, 2)
+    pca_reduced_hd = evaluation.pca_dim_reduction(hd_dataset, 2)
+    pca_reduced_MNIST_images = evaluation.pca_dim_reduction(MNIST_images, 20)
+    pca_reduced_datasets = {"swiss_roll": pca_reduced_swiss_roll, "helix": pca_reduced_helix, "twin_peaks": pca_reduced_twin_peaks,
+                         "broken_swiss_roll": pca_reduced_broken_swiss, "hd": pca_reduced_hd, "MNIST": pca_reduced_MNIST_images}
+    # pca_reduced_datasets = [pca_reduced_swiss_roll, pca_reduced_helix, pca_reduced_twin_peaks, pca_reduced_broken_swiss,
+    #                         pca_reduced_hd, pca_reduced_MNIST_images]
+    pk.dump(pca_reduced_datasets, open('pca_reduced_datasets.p', 'wb'))
+    print("Finished! \n")
+
+def perform_lle_to_orginal_datasets():
+    lle_reduced_datasets_under_diff_k = []  # this list contains results under different k parameter, where idx i is the result for k = i + 5
+    original_datasets = pickle.load(open('original_datasets.p', 'rb'))
+    swiss_roll_dataset = original_datasets["swiss_roll"]
+    helix_dataset = original_datasets["helix"]
+    twin_peaks_dataset = original_datasets["twin_peaks"]
+    broken_swiss_dataset = original_datasets["broken_swiss_roll"]
+    hd_dataset = original_datasets["hd"]
+    MNIST_images = original_datasets["MNIST"]
+    print("Now using LLE to reduce dimensionality of each dataset. Note that the parameter k ranges from 5 to 15 so this step is gonna take a while")
+    for k in range(5, 16):
+        lle_reduced_swiss_roll = lle.locally_linear_embedding(np.array(swiss_roll_dataset, np.float64), k, 2)[0].tolist()
+        lle_reduced_helix = lle.locally_linear_embedding(np.array(helix_dataset, np.float64), k, 1)[0].tolist()
+        lle_reduced_twin_peaks = lle.locally_linear_embedding(np.array(twin_peaks_dataset, np.float64), k, 2)[0].tolist()
+        lle_reduced_broken_swiss = lle.locally_linear_embedding(np.array(broken_swiss_dataset, np.float64), k, 2)[0].tolist()
+        lle_reduced_hd = lle.locally_linear_embedding(np.array(hd_dataset, np.float64), k, 5)[0].tolist()
+        lle_reduced_MNIST_images = lle.locally_linear_embedding(np.array(MNIST_images, np.float64), k, 20)[0].tolist()
+        curr_k_results = {"swiss_roll": lle_reduced_swiss_roll, "helix": lle_reduced_helix,
+                                "twin_peaks": lle_reduced_twin_peaks,
+                                "broken_swiss_roll": lle_reduced_broken_swiss, "hd": lle_reduced_hd,
+                                "MNIST": lle_reduced_MNIST_images}
+        lle_reduced_datasets_under_diff_k.append(curr_k_results)
+    pk.dump(lle_reduced_datasets_under_diff_k, open('lle_reduced_datasets_under_diff_k.p', 'wb'))
