@@ -11,12 +11,11 @@ OS: Mac OS
 Libraries: Numpy, Scipy, sklearn, matplotlib
 
 HOW-TO-USE:
-Just execute the "Program.py" file using Python intepreter. There will be four options available for TA to use. 
-Option 1 is used for generating artificial datasets. However, the datasets used in report is already included in the submission, and running option 1 will overwrite the exsisting datasets. So no need to run this option if the TA wants only to verify the results in report.
-Option 2 is used for only evaluating the datasets produced by PCA. Evaluation includes calculating Trustworthiness, Continuity and Generalization Errors.
-Option 3 is used for only evaluating the datasets produced by LLE. Evaluation includes calculating Trustworthiness, Continuity and Generalization Errors.
-Option 4 is used for running everything from dataset generation to evaluation. This process, however, can take up to 8 hours depending on the speed of the machine. 
-
+Just execute the "Program.py" file using Python intepreter. 
+There will be nine options with descriptions available for you to use.
+Enter the option that you would like to perform. Enter 0 if you want to exit.
+Please note that the datasets stored in the submission is the ones we used int the report.
+Generate new datasets will overwrite them.
 
 
 
